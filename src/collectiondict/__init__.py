@@ -9,4 +9,10 @@ _ValueT = t.TypeVar("_ValueT")
 def collectiondict(
     clct: t.Type[t.List[_ValueT]], iterable: t.Iterable[t.Tuple[_KeyT, _ValueT]]
 ) -> dict[_KeyT, t.List[_ValueT]]:
-    return {}
+    ret: t.Dict[_KeyT, t.List[_ValueT]] = {}
+    for key, val in iterable:
+        try:
+            ret[key].append(val)
+        except KeyError:
+            ret[key] = [val]
+    return ret
