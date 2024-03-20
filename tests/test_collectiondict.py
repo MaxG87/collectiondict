@@ -15,7 +15,8 @@ _ValueT = t.TypeVar("_ValueT")
     clct=st.sampled_from([list, set]),
 )
 def test_dict_to_one_element_collections(
-    ref_dict: dict[_KeyT, _ValueT], clct: t.Type[list[_ValueT]] | t.Type[set[_ValueT]]
+    ref_dict: dict[_KeyT, _ValueT],
+    clct: t.Union[t.Type[list[_ValueT]], t.Type[set[_ValueT]]],
 ) -> None:
     expected = [(key, clct([val])) for key, val in ref_dict.items()]
     result = list(collectiondict(clct, ref_dict.items()).items())
@@ -49,9 +50,13 @@ def test_to_collectiondict_for_lists(stream: list[tuple[_KeyT, _ValueT]]) -> Non
 
 
 @given(
+    clct_t=st.sampled_from([set, frozenset]),
     stream=st.lists(st.tuples(st.integers(), st.integers())),
 )
-def test_to_collectiondict_for_sets(stream: list[tuple[_KeyT, _ValueT]]) -> None:
+def test_to_collectiondict_for_reordering_robust_collections(
+    clct_t: t.Union[t.Type[set[_ValueT]], t.Type[frozenset[_ValueT]]],
+    stream: list[tuple[_KeyT, _ValueT]],
+) -> None:
     # This uses a very naive implementation to generate the expected result.
     # The actual implementation will use a slightly more clever implemenation
     # that uses less memory.
@@ -64,6 +69,6 @@ def test_to_collectiondict_for_sets(stream: list[tuple[_KeyT, _ValueT]]) -> None
     expected = {
         key: {kv[1] for kv in key_and_val} for key, key_and_val in grouped_by_key
     }
-    result = collectiondict(set, stream)
-    assert all(isinstance(clct, set) for clct in result.values())
+    result = collectiondict(clct_t, stream)
+    assert all(isinstance(clct, clct_t) for clct in result.values())
     assert result == expected
