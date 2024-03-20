@@ -7,9 +7,9 @@ _ValueT = t.TypeVar("_ValueT")
 
 
 def collectiondict(
-    clct: t.Type[t.List[_ValueT]], iterable: t.Iterable[t.Tuple[_KeyT, _ValueT]]
-) -> dict[_KeyT, t.List[_ValueT]]:
-    ret: t.Dict[_KeyT, t.List[_ValueT]] = {}
+    clct: t.Type[list[_ValueT]], iterable: t.Iterable[tuple[_KeyT, _ValueT]]
+) -> dict[_KeyT, list[_ValueT]]:
+    ret: dict[_KeyT, list[_ValueT]] = {}
     for key, val in iterable:
         try:
             ret[key].append(val)

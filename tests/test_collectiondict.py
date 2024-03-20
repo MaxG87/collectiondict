@@ -15,7 +15,7 @@ _ValueT = t.TypeVar("_ValueT")
     clct=st.sampled_from([list]),
 )
 def test_dict_to_one_element_collections(
-    ref_dict: dict[_KeyT, _ValueT], clct: t.Type[t.List[_ValueT]]
+    ref_dict: dict[_KeyT, _ValueT], clct: t.Type[list[_ValueT]]
 ) -> None:
     expected = [(key, clct([val])) for key, val in ref_dict.items()]
     result = list(collectiondict(clct, ref_dict.items()).items())
@@ -25,7 +25,7 @@ def test_dict_to_one_element_collections(
 @given(
     stream=st.lists(st.tuples(st.integers(), st.integers())),
 )
-def test_to_collectiondict_for_lists(stream: t.List[t.Tuple[_KeyT, _ValueT]]) -> None:
+def test_to_collectiondict_for_lists(stream: list[tuple[_KeyT, _ValueT]]) -> None:
     # This uses a very naive implementation to generate the expected result.
     # The actual implementation will use a slightly more clever implemenation
     # that uses less memory.
