@@ -41,6 +41,7 @@ def test_to_collectiondict_for_lists(stream: list[tuple[_KeyT, _ValueT]]) -> Non
     result = collectiondict(list, stream)
 
     assert result.keys() == expected.keys()
+    assert all(isinstance(clct, list) for clct in result.values())
     for key in result:
         result_values = sorted(result[key])
         expected_values = sorted(expected[key])  # type: ignore[type-var]
