@@ -1,6 +1,7 @@
 import typing as t
 from itertools import groupby
 
+import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
@@ -72,3 +73,14 @@ def test_to_collectiondict_for_reordering_robust_collections(
     result = collectiondict(clct_t, stream)
     assert all(isinstance(clct, clct_t) for clct in result.values())
     assert result == expected
+
+
+def test_breaks_for_unhashable_values_with_sets() -> None:
+    # These should raise type errors. However, `mypy` does not support that in
+    # full generality: https://github.com/python/typeshed/issues/3884.
+    # This test exists as a marker and playground.
+    stream: list[tuple[int, list[int]]] = [(1234, [1234])]
+    with pytest.raises(TypeError):
+        collectiondict(set, stream)
+    with pytest.raises(TypeError):
+        collectiondict(frozenset, stream)
