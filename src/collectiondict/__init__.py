@@ -27,15 +27,25 @@ def collectiondict(  # pragma: nocover
 ) -> dict[_KeyT, frozenset[_HashableValueT]]: ...
 
 
+@t.overload
+def collectiondict(  # pragma: nocover
+    clct: t.Type[tuple[_ValueT, ...]], iterable: t.Iterable[tuple[_KeyT, _ValueT]]
+) -> dict[_KeyT, tuple[_ValueT, ...]]: ...
+
+
 def collectiondict(
     clct: t.Union[
-        t.Type[list[_ValueT]], t.Type[set[_ValueT]], t.Type[frozenset[_ValueT]]
+        t.Type[list[_ValueT]],
+        t.Type[set[_ValueT]],
+        t.Type[frozenset[_ValueT]],
+        t.Type[tuple[_ValueT, ...]],
     ],
     iterable: t.Iterable[tuple[_KeyT, _ValueT]],
 ) -> t.Union[
     dict[_KeyT, list[_ValueT]],
     dict[_KeyT, set[_ValueT]],
     dict[_KeyT, frozenset[_ValueT]],
+    dict[_KeyT, tuple[_ValueT, ...]],
 ]:
     if issubclass(clct, list):
         return _collectiondict_for_lists(clct, iterable)
@@ -43,6 +53,8 @@ def collectiondict(
         return _collectiondict_for_sets(clct, iterable)
     elif issubclass(clct, frozenset):
         return _collectiondict_for_frozensets(clct, iterable)
+    elif issubclass(clct, tuple):
+        return _collectiondict_for_tuple(clct, iterable)
     else:
         # Due to compatiblity with Python 3.9 and 3.10, we cannot use
         # t.assert_never here. That would be preferable, though.
@@ -86,4 +98,18 @@ def _collectiondict_for_frozensets(
             ret[key] = fs.union([val])
         except KeyError:
             ret[key] = frozenset([val])
+    return ret
+
+
+def _collectiondict_for_tuple(
+    clct: t.Type[tuple[_ValueT, ...]],
+    iterable: t.Iterable[tuple[_KeyT, _ValueT]],
+) -> dict[_KeyT, tuple[_ValueT, ...]]:
+    ret: dict[_KeyT, tuple[_ValueT, ...]] = {}
+    for key, val in iterable:
+        try:
+            tup = ret[key]
+            ret[key] = (*tup, val)
+        except KeyError:
+            ret[key] = (val,)
     return ret

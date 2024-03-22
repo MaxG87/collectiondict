@@ -13,12 +13,15 @@ _ValueT = t.TypeVar("_ValueT")
 
 @given(
     ref_dict=st.dictionaries(st.integers(), st.integers()),
-    clct=st.sampled_from([list, set, frozenset]),
+    clct=st.sampled_from([list, set, frozenset, tuple]),
 )
 def test_dict_to_one_element_collections(
     ref_dict: dict[_KeyT, _ValueT],
     clct: t.Union[
-        t.Type[list[_ValueT]], t.Type[set[_ValueT]], t.Type[frozenset[_ValueT]]
+        t.Type[list[_ValueT]],
+        t.Type[set[_ValueT]],
+        t.Type[frozenset[_ValueT]],
+        t.Type[tuple[_ValueT, ...]],
     ],
 ) -> None:
     expected = [(key, clct([val])) for key, val in ref_dict.items()]
@@ -27,9 +30,13 @@ def test_dict_to_one_element_collections(
 
 
 @given(
+    clct_t=st.sampled_from([list, tuple]),
     stream=st.lists(st.tuples(st.integers(), st.integers())),
 )
-def test_to_collectiondict_for_lists(stream: list[tuple[_KeyT, _ValueT]]) -> None:
+def test_to_collectiondict_for_lists(
+    clct_t: t.Union[t.Type[list[_ValueT]], t.Type[tuple[_ValueT, ...]]],
+    stream: list[tuple[_KeyT, _ValueT]],
+) -> None:
     # This uses a very naive implementation to generate the expected result.
     # The actual implementation will use a slightly more clever implemenation
     # that uses less memory.
@@ -42,12 +49,12 @@ def test_to_collectiondict_for_lists(stream: list[tuple[_KeyT, _ValueT]]) -> Non
     expected = {
         key: [val for _, val in key_and_val] for key, key_and_val in grouped_by_key
     }
-    result = collectiondict(list, stream)
+    result = collectiondict(clct_t, stream)
 
     assert result.keys() == expected.keys()
-    assert all(isinstance(clct, list) for clct in result.values())
+    assert all(isinstance(clct, clct_t) for clct in result.values())
     for key in result:
-        result_values = sorted(result[key])
+        result_values = sorted(result[key])  # type: ignore[type-var]
         expected_values = sorted(expected[key])  # type: ignore[type-var]
         assert result_values == expected_values
 
