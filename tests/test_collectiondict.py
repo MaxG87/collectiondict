@@ -11,9 +11,27 @@ _KeyT = t.TypeVar("_KeyT", bound=t.Hashable)
 _ValueT = t.TypeVar("_ValueT")
 
 
+class MyFrozenset(frozenset[_ValueT]):
+    pass
+
+
+class MyList(list[_ValueT]):
+    pass
+
+
+class MySet(set[_ValueT]):
+    pass
+
+
+class MyTuple(tuple[_ValueT, ...]):
+    pass
+
+
 @given(
     ref_dict=st.dictionaries(st.integers(), st.integers()),
-    clct=st.sampled_from([list, set, frozenset, tuple]),
+    clct=st.sampled_from(
+        [list, set, frozenset, tuple, MyFrozenset, MyList, MySet, MyTuple]
+    ),
 )
 def test_dict_to_one_element_collections(
     ref_dict: dict[_KeyT, _ValueT],
@@ -30,11 +48,16 @@ def test_dict_to_one_element_collections(
 
 
 @given(
-    clct_t=st.sampled_from([list, tuple]),
+    clct_t=st.sampled_from([list, tuple, MyList, MyTuple]),
     stream=st.lists(st.tuples(st.integers(), st.integers())),
 )
 def test_to_collectiondict_for_lists(
-    clct_t: t.Union[t.Type[list[_ValueT]], t.Type[tuple[_ValueT, ...]]],
+    clct_t: t.Union[
+        t.Type[MyList[_ValueT]],
+        t.Type[MyTuple[_ValueT]],
+        t.Type[list[_ValueT]],
+        t.Type[tuple[_ValueT, ...]],
+    ],
     stream: list[tuple[_KeyT, _ValueT]],
 ) -> None:
     # This uses a very naive implementation to generate the expected result.
@@ -60,11 +83,16 @@ def test_to_collectiondict_for_lists(
 
 
 @given(
-    clct_t=st.sampled_from([set, frozenset]),
+    clct_t=st.sampled_from([set, frozenset, MyFrozenset, MySet]),
     stream=st.lists(st.tuples(st.integers(), st.integers())),
 )
 def test_to_collectiondict_for_reordering_robust_collections(
-    clct_t: t.Union[t.Type[set[_ValueT]], t.Type[frozenset[_ValueT]]],
+    clct_t: t.Union[
+        t.Type[MyFrozenset[_ValueT]],
+        t.Type[MySet[_ValueT]],
+        t.Type[frozenset[_ValueT]],
+        t.Type[set[_ValueT]],
+    ],
     stream: list[tuple[_KeyT, _ValueT]],
 ) -> None:
     # This uses a very naive implementation to generate the expected result.
@@ -93,3 +121,7 @@ def test_breaks_for_unhashable_values_with_sets() -> None:
         collectiondict(set, stream)
     with pytest.raises(TypeError):
         collectiondict(frozenset, stream)
+    with pytest.raises(TypeError):
+        collectiondict(MySet, stream)
+    with pytest.raises(TypeError):
+        collectiondict(MyFrozenset, stream)

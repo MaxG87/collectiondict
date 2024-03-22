@@ -70,7 +70,7 @@ def _collectiondict_for_lists(
         try:
             ret[key].append(val)
         except KeyError:
-            ret[key] = [val]
+            ret[key] = clct([val])
     return ret
 
 
@@ -83,7 +83,7 @@ def _collectiondict_for_sets(
         try:
             ret[key].add(val)
         except KeyError:
-            ret[key] = {val}
+            ret[key] = clct([val])
     return ret
 
 
@@ -91,13 +91,17 @@ def _collectiondict_for_frozensets(
     clct: t.Type[frozenset[_HashableValueT]],
     iterable: t.Iterable[tuple[_KeyT, _HashableValueT]],
 ) -> dict[_KeyT, frozenset[_HashableValueT]]:
+    # TODO: One could cosider to create collectiondict of `set` first and to
+    # transform all sets to frozensets later on. That would require some
+    # justification, e.g. benchmarks.
     ret: dict[_KeyT, frozenset[_HashableValueT]] = {}
     for key, val in iterable:
         try:
             fs = ret[key]
-            ret[key] = fs.union([val])
+            new_fs = fs.union([val])
+            ret[key] = new_fs if clct == frozenset else clct(new_fs)
         except KeyError:
-            ret[key] = frozenset([val])
+            ret[key] = clct([val])
     return ret
 
 
@@ -105,11 +109,14 @@ def _collectiondict_for_tuple(
     clct: t.Type[tuple[_ValueT, ...]],
     iterable: t.Iterable[tuple[_KeyT, _ValueT]],
 ) -> dict[_KeyT, tuple[_ValueT, ...]]:
+    # TODO: One could cosider to create collectiondict of `list` first and to
+    # transform all lists to tuples later on. That would require some
+    # justification, e.g. benchmarks.
     ret: dict[_KeyT, tuple[_ValueT, ...]] = {}
     for key, val in iterable:
         try:
             tup = ret[key]
-            ret[key] = (*tup, val)
+            ret[key] = clct([*tup, val])
         except KeyError:
-            ret[key] = (val,)
+            ret[key] = clct([val])
     return ret
