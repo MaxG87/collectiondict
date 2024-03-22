@@ -46,7 +46,7 @@ def collectiondict(
     else:
         # Due to compatiblity with Python 3.9 and 3.10, we cannot use
         # t.assert_never here. That would be preferable, though.
-        raise AssertionError("unreachable")  # type: ignore[unreachable, unused-ignore]
+        raise AssertionError("Invalid collection type passed!")  # type: ignore[unreachable, unused-ignore]
 
 
 def _collectiondict_for_lists(
