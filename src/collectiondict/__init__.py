@@ -47,6 +47,40 @@ def collectiondict(
     dict[_KeyT, frozenset[_ValueT]],
     dict[_KeyT, tuple[_ValueT, ...]],
 ]:
+    """
+    Create dictionaries that collect values into collections
+
+    Given any stream of key-value tuples, this function creates a
+    multi-dictionary which maps all values to the corresponding key. Thus,
+    `collectiondict(clct, stream)` is similar to `dict(stream)` but does not
+    discard values.
+
+    The implementation tries to be memory efficient and performant. Therefore,
+    it is possible to use it on extremely large streams, as long as the end
+    result fits in memory. Thus, if a list of the stream consumes more than
+    half of the available memory, `collectiondict` can still be used.
+    Furthermore, for deduplicating collections, e.g. `set`, the stream could
+    exceed available memory, as long as the key-value pairs do not. One of the
+    examples covers this scenario.
+
+    The supported collections are fixed. Only the built-in collections
+    `frozenset`, `list`, `set`, and `tuple` as well as their subclasses are
+    supported. If a unsupported collection is passed, an exception is raised.
+    However, `mypy` will warn about it.
+
+
+    Examples:
+    ---------
+    Simple usage using `set`:
+    >>> collectiondict(set, [("a", 1), ("b", 2), ("a", 3)])
+    {'a': {1, 3}, 'b': {2}}
+
+    Scenario that might exceed memory:
+    >>> N=1000  # could be humongous, e.g. 10**20
+    >>> collectiondict(set, [(str(n%2), n%3) for n in range(N)])
+    {'0': {0, 1, 2}, '1': {0, 1, 2}}
+    """
+
     if issubclass(clct, list):
         return _collectiondict_for_lists(clct, iterable)
     elif issubclass(clct, set):
