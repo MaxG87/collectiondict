@@ -1,10 +1,18 @@
 import typing as t
+from collections import Counter
 
 _T = t.TypeVar("_T")
 _CollectionT = t.Generic[_T]
 _KeyT = t.TypeVar("_KeyT", bound=t.Hashable)
 _ValueT = t.TypeVar("_ValueT")
 _HashableValueT = t.TypeVar("_HashableValueT", bound=t.Hashable)
+
+
+@t.overload
+def collectiondict(  # pragma: nocover
+    clct: t.Type[Counter[_HashableValueT]],
+    iterable: t.Iterable[tuple[_KeyT, _HashableValueT]],
+) -> dict[_KeyT, Counter[_HashableValueT]]: ...
 
 
 @t.overload
@@ -35,6 +43,7 @@ def collectiondict(  # pragma: nocover
 
 def collectiondict(
     clct: t.Union[
+        t.Type[Counter[_ValueT]],
         t.Type[list[_ValueT]],
         t.Type[set[_ValueT]],
         t.Type[frozenset[_ValueT]],
@@ -42,6 +51,7 @@ def collectiondict(
     ],
     iterable: t.Iterable[tuple[_KeyT, _ValueT]],
 ) -> t.Union[
+    dict[_KeyT, Counter[_ValueT]],
     dict[_KeyT, list[_ValueT]],
     dict[_KeyT, set[_ValueT]],
     dict[_KeyT, frozenset[_ValueT]],
@@ -64,9 +74,9 @@ def collectiondict(
     examples covers this scenario.
 
     The supported collections are fixed. Only the built-in collections
-    `frozenset`, `list`, `set`, and `tuple` as well as their subclasses are
-    supported. If a unsupported collection is passed, an exception is raised.
-    However, `mypy` will warn about it.
+    `Counter`, `frozenset`, `list`, `set`, and `tuple` as well as their
+    subclasses are supported. If a unsupported collection is passed, an
+    exception is raised. However, `mypy` will warn about it.
 
 
     Examples:
@@ -77,11 +87,13 @@ def collectiondict(
 
     Scenario that might exceed memory:
     >>> N=1000  # could be humongous, e.g. 10**20
-    >>> collectiondict(set, [(str(n%2), n%3) for n in range(N)])
+    >>> collectiondict(set, ((str(n%2), n%3) for n in range(N)))
     {'0': {0, 1, 2}, '1': {0, 1, 2}}
     """
 
-    if issubclass(clct, list):
+    if issubclass(clct, Counter):
+        return _collectiondict_for_counter(clct, iterable)
+    elif issubclass(clct, list):
         return _collectiondict_for_lists(clct, iterable)
     elif issubclass(clct, set):
         return _collectiondict_for_sets(clct, iterable)
@@ -93,6 +105,19 @@ def collectiondict(
         # Due to compatiblity with Python 3.9 and 3.10, we cannot use
         # t.assert_never here. That would be preferable, though.
         raise AssertionError("Invalid collection type passed!")  # type: ignore[unreachable, unused-ignore]
+
+
+def _collectiondict_for_counter(
+    clct: t.Type[Counter[_HashableValueT]],
+    iterable: t.Iterable[tuple[_KeyT, _HashableValueT]],
+) -> dict[_KeyT, Counter[_HashableValueT]]:
+    ret: dict[_KeyT, Counter[_HashableValueT]] = {}
+    for key, val in iterable:
+        try:
+            ret[key][val] += 1
+        except KeyError:
+            ret[key] = clct([val])
+    return ret
 
 
 def _collectiondict_for_lists(

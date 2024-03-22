@@ -1,4 +1,5 @@
 import typing as t
+from collections import Counter
 from itertools import groupby
 
 import pytest
@@ -9,6 +10,10 @@ from collectiondict import collectiondict
 
 _KeyT = t.TypeVar("_KeyT", bound=t.Hashable)
 _ValueT = t.TypeVar("_ValueT")
+
+
+class MyCounter(Counter[_ValueT]):
+    pass
 
 
 class MyFrozenset(frozenset[_ValueT]):
@@ -30,15 +35,27 @@ class MyTuple(tuple[_ValueT, ...]):
 @given(
     ref_dict=st.dictionaries(st.integers(), st.integers()),
     clct=st.sampled_from(
-        [list, set, frozenset, tuple, MyFrozenset, MyList, MySet, MyTuple]
+        [
+            list,
+            set,
+            frozenset,
+            tuple,
+            Counter,
+            MyCounter,
+            MyFrozenset,
+            MyList,
+            MySet,
+            MyTuple,
+        ]
     ),
 )
 def test_dict_to_one_element_collections(
     ref_dict: dict[_KeyT, _ValueT],
     clct: t.Union[
+        t.Type[Counter[_ValueT]],
+        t.Type[frozenset[_ValueT]],
         t.Type[list[_ValueT]],
         t.Type[set[_ValueT]],
-        t.Type[frozenset[_ValueT]],
         t.Type[tuple[_ValueT, ...]],
     ],
 ) -> None:
@@ -83,11 +100,13 @@ def test_to_collectiondict_for_lists(
 
 
 @given(
-    clct_t=st.sampled_from([set, frozenset, MyFrozenset, MySet]),
+    clct_t=st.sampled_from([set, frozenset, MyFrozenset, MySet, MyCounter, Counter]),
     stream=st.lists(st.tuples(st.integers(), st.integers())),
 )
 def test_to_collectiondict_for_reordering_robust_collections(
     clct_t: t.Union[
+        t.Type[Counter[_ValueT]],
+        t.Type[MyCounter[_ValueT]],
         t.Type[MyFrozenset[_ValueT]],
         t.Type[MySet[_ValueT]],
         t.Type[frozenset[_ValueT]],
@@ -105,7 +124,8 @@ def test_to_collectiondict_for_reordering_robust_collections(
     sorted_pairs = sorted(stream)
     grouped_by_key = groupby(sorted_pairs, lambda tup: tup[0])
     expected = {
-        key: {kv[1] for kv in key_and_val} for key, key_and_val in grouped_by_key
+        key: clct_t([kv[1] for kv in key_and_val])
+        for key, key_and_val in grouped_by_key
     }
     result = collectiondict(clct_t, stream)
     assert all(isinstance(clct, clct_t) for clct in result.values())
