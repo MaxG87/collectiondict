@@ -98,8 +98,9 @@ def _collectiondict_for_frozensets(
     for key, val in iterable:
         try:
             fs = ret[key]
-            new_fs = fs.union([val])
-            ret[key] = new_fs if clct == frozenset else clct(new_fs)
+            if val not in fs:
+                new_fs = fs.union([val])
+                ret[key] = new_fs if clct == frozenset else clct(new_fs)
         except KeyError:
             ret[key] = clct([val])
     return ret
