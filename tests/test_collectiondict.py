@@ -13,11 +13,13 @@ _ValueT = t.TypeVar("_ValueT")
 
 @given(
     ref_dict=st.dictionaries(st.integers(), st.integers()),
-    clct=st.sampled_from([list, set]),
+    clct=st.sampled_from([list, set, frozenset]),
 )
 def test_dict_to_one_element_collections(
     ref_dict: dict[_KeyT, _ValueT],
-    clct: t.Union[t.Type[list[_ValueT]], t.Type[set[_ValueT]]],
+    clct: t.Union[
+        t.Type[list[_ValueT]], t.Type[set[_ValueT]], t.Type[frozenset[_ValueT]]
+    ],
 ) -> None:
     expected = [(key, clct([val])) for key, val in ref_dict.items()]
     result = list(collectiondict(clct, ref_dict.items()).items())
