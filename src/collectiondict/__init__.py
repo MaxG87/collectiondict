@@ -2,10 +2,14 @@ import typing as t
 from collections import Counter
 
 _T = t.TypeVar("_T")
-_CollectionT = t.Generic[_T]
 _KeyT = t.TypeVar("_KeyT", bound=t.Hashable)
 _ValueT = t.TypeVar("_ValueT")
 _HashableValueT = t.TypeVar("_HashableValueT", bound=t.Hashable)
+
+# TODO Currently, the type annotations are not perfect. Due to the limited
+# nature of Python's type annotations, it is not possible to specify the correct
+# return type for the custom classes. Thus, custom classes are supported but the
+# return type is not inferred to be the parent class.
 
 
 @t.overload
