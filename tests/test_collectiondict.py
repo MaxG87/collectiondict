@@ -7,29 +7,10 @@ from hypothesis import given
 from hypothesis import strategies as st
 
 from collectiondict import collectiondict
+from tests import custom_classes as cc
 
 _KeyT = t.TypeVar("_KeyT", bound=t.Hashable)
 _ValueT = t.TypeVar("_ValueT")
-
-
-class MyCounter(Counter[_ValueT]):
-    pass
-
-
-class MyFrozenset(frozenset[_ValueT]):
-    pass
-
-
-class MyList(list[_ValueT]):
-    pass
-
-
-class MySet(set[_ValueT]):
-    pass
-
-
-class MyTuple(tuple[_ValueT, ...]):
-    pass
 
 
 @given(
@@ -41,11 +22,11 @@ class MyTuple(tuple[_ValueT, ...]):
             frozenset,
             tuple,
             Counter,
-            MyCounter,
-            MyFrozenset,
-            MyList,
-            MySet,
-            MyTuple,
+            cc.MyCounter,
+            cc.MyFrozenset,
+            cc.MyList,
+            cc.MySet,
+            cc.MyTuple,
         ]
     ),
 )
@@ -65,13 +46,13 @@ def test_dict_to_one_element_collections(
 
 
 @given(
-    clct_t=st.sampled_from([list, tuple, MyList, MyTuple]),
+    clct_t=st.sampled_from([list, tuple, cc.MyList, cc.MyTuple]),
     stream=st.lists(st.tuples(st.integers(), st.integers())),
 )
 def test_to_collectiondict_for_lists(
     clct_t: t.Union[
-        t.Type[MyList[_ValueT]],
-        t.Type[MyTuple[_ValueT]],
+        t.Type[cc.MyList[_ValueT]],
+        t.Type[cc.MyTuple[_ValueT]],
         t.Type[list[_ValueT]],
         t.Type[tuple[_ValueT, ...]],
     ],
@@ -100,15 +81,17 @@ def test_to_collectiondict_for_lists(
 
 
 @given(
-    clct_t=st.sampled_from([set, frozenset, MyFrozenset, MySet, MyCounter, Counter]),
+    clct_t=st.sampled_from(
+        [set, frozenset, cc.MyFrozenset, cc.MySet, cc.MyCounter, Counter]
+    ),
     stream=st.lists(st.tuples(st.integers(), st.integers())),
 )
 def test_to_collectiondict_for_reordering_robust_collections(
     clct_t: t.Union[
         t.Type[Counter[_ValueT]],
-        t.Type[MyCounter[_ValueT]],
-        t.Type[MyFrozenset[_ValueT]],
-        t.Type[MySet[_ValueT]],
+        t.Type[cc.MyCounter[_ValueT]],
+        t.Type[cc.MyFrozenset[_ValueT]],
+        t.Type[cc.MySet[_ValueT]],
         t.Type[frozenset[_ValueT]],
         t.Type[set[_ValueT]],
     ],
@@ -142,6 +125,6 @@ def test_breaks_for_unhashable_values_with_sets() -> None:
     with pytest.raises(TypeError):
         collectiondict(frozenset, stream)
     with pytest.raises(TypeError):
-        collectiondict(MySet, stream)
+        collectiondict(cc.MySet, stream)
     with pytest.raises(TypeError):
-        collectiondict(MyFrozenset, stream)
+        collectiondict(cc.MyFrozenset, stream)
