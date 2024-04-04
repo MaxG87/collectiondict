@@ -2,10 +2,14 @@ import typing as t
 from collections import Counter
 
 _T = t.TypeVar("_T")
-_CollectionT = t.Generic[_T]
 _KeyT = t.TypeVar("_KeyT", bound=t.Hashable)
 _ValueT = t.TypeVar("_ValueT")
 _HashableValueT = t.TypeVar("_HashableValueT", bound=t.Hashable)
+
+# TODO Currently, the type annotations are not perfect. Due to the limited
+# nature of Python's type annotations, it is not possible to specify the correct
+# return type for the custom classes. Thus, custom classes are supported but the
+# return type is not inferred to be the parent class.
 
 
 @t.overload
@@ -78,12 +82,27 @@ def collectiondict(
     subclasses are supported. If a unsupported collection is passed, an
     exception is raised. However, `mypy` will warn about it.
 
+    Due to the limits of Pythons type annotations, it is not possible to
+    specify the correct return type for the custom classes. Thus, custom
+    classes are supported but the return type is not inferred to be the parent
+    class.
+
+    In order to have the best type inference, it is recommended to **cast**
+    `clct` to specify the value type. Passing a specialised collection class is
+    **not** supported currently. The examples show how to use a cast.
+
 
     Examples:
     ---------
     Simple usage using `set`:
     >>> collectiondict(set, [("a", 1), ("b", 2), ("a", 3)])
     {'a': {1, 3}, 'b': {2}}
+
+    Usage using `frozenset` and a cast to have the best type inference:
+    >>> import typing as t
+    >>> clct = t.cast(t.Type[frozenset[int]], frozenset)
+    >>> collectiondict(clct, [("a", 1), ("b", 2), ("a", 3)])
+    {'a': frozenset({1, 3}), 'b': frozenset({2})}
 
     Scenario that might exceed memory:
     >>> N=1000  # could be humongous, e.g. 10**20
