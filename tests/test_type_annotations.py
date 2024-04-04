@@ -1,5 +1,6 @@
 import sys
 import typing as t
+from collections import Counter
 
 from collectiondict import collectiondict
 
@@ -42,3 +43,11 @@ def test_type_inference_for_frozenset() -> None:
     result = collectiondict(clct, iterable=test_data)
     assert_type(test_data, list[tuple[str, int]])
     assert_type(result, dict[str, frozenset[int]])
+
+
+def test_type_inference_for_Counter() -> None:
+    test_data = [("a", 1), ("b", 2), ("c", 3)]
+    clct = t.cast(t.Type[Counter[int]], Counter)
+    result = collectiondict(clct, iterable=test_data)
+    assert_type(test_data, list[tuple[str, int]])
+    assert_type(result, dict[str, Counter[int]])
