@@ -18,3 +18,27 @@ def test_type_inference_for_list() -> None:
     result = collectiondict(clct, iterable=test_data)
     assert_type(test_data, list[tuple[str, int]])
     assert_type(result, dict[str, list[int]])
+
+
+def test_type_inference_for_set() -> None:
+    test_data = [("a", 1), ("b", 2), ("c", 3)]
+    clct = t.cast(t.Type[set[int]], set)
+    result = collectiondict(clct, iterable=test_data)
+    assert_type(test_data, list[tuple[str, int]])
+    assert_type(result, dict[str, set[int]])
+
+
+def test_type_inference_for_tuple() -> None:
+    test_data = [("a", 1), ("b", 2), ("c", 3)]
+    clct = t.cast(t.Type[tuple[int, ...]], tuple)
+    result = collectiondict(clct, iterable=test_data)
+    assert_type(test_data, list[tuple[str, int]])
+    assert_type(result, dict[str, tuple[int, ...]])
+
+
+def test_type_inference_for_frozenset() -> None:
+    test_data = [("a", 1), ("b", 2), ("c", 3)]
+    clct = t.cast(t.Type[frozenset[int]], frozenset)
+    result = collectiondict(clct, iterable=test_data)
+    assert_type(test_data, list[tuple[str, int]])
+    assert_type(result, dict[str, frozenset[int]])
