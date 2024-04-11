@@ -8,31 +8,15 @@ from hypothesis import strategies as st
 
 from collectiondict import collectiondict
 from tests import custom_classes as cc
+from tests import hypothesis_utils as hu
 
 _KeyT = t.TypeVar("_KeyT", bound=t.Hashable)
 _ValueT = t.TypeVar("_ValueT")
 
 
-def valid_streams() -> st.SearchStrategy[list[tuple[_KeyT, _ValueT]]]:
-    return st.lists(st.tuples(st.integers(), st.integers()))
-
-
 @given(
     ref_dict=st.dictionaries(st.integers(), st.integers()),
-    clct=st.sampled_from(
-        [
-            list,
-            set,
-            frozenset,
-            tuple,
-            Counter,
-            cc.MyCounter,
-            cc.MyFrozenset,
-            cc.MyList,
-            cc.MySet,
-            cc.MyTuple,
-        ]
-    ),
+    clct=hu.valid_collections(),
 )
 def test_dict_to_one_element_collections(
     ref_dict: dict[_KeyT, _ValueT],
@@ -50,8 +34,8 @@ def test_dict_to_one_element_collections(
 
 
 @given(
-    clct_t=st.sampled_from([list, tuple, cc.MyList, cc.MyTuple]),
-    stream=valid_streams(),
+    clct_t=hu.valid_ordered_collections(),
+    stream=hu.valid_streams(),
 )
 def test_to_collectiondict_for_lists(
     clct_t: t.Union[
@@ -85,10 +69,8 @@ def test_to_collectiondict_for_lists(
 
 
 @given(
-    clct_t=st.sampled_from(
-        [set, frozenset, cc.MyFrozenset, cc.MySet, cc.MyCounter, Counter]
-    ),
-    stream=valid_streams(),
+    clct_t=hu.valid_hashing_collections(),
+    stream=hu.valid_streams(),
 )
 def test_to_collectiondict_for_reordering_robust_collections(
     clct_t: t.Union[
@@ -120,7 +102,7 @@ def test_to_collectiondict_for_reordering_robust_collections(
 
 
 @given(
-    stream=valid_streams(),
+    stream=hu.valid_streams(),
     invalid_clct=st.sampled_from([dict, list[int], deque]),
 )
 def test_breaks_for_invalid_collections(
