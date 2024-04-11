@@ -12,7 +12,9 @@ from tests import hypothesis_utils as hu
 
 
 def valid_mappings() -> st.SearchStrategy[dict[int, int]]:
-    return st.dictionaries(st.integers(), st.integers())
+    # We take the modulo 13 to provoke reuse of values. This will force the
+    # implementation to create collections with multiple keys correctly.
+    return st.dictionaries(st.integers(), st.integers().map(lambda n: n % 13))
 
 
 @given(mapping=valid_mappings(), clct=hu.valid_ordered_collections())
