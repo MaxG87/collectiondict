@@ -37,7 +37,6 @@ enable_error_code = [
 ]
 strict = true
 
-
 [tool.pytest.ini_options]
 addopts = [
     "--cov", "src",

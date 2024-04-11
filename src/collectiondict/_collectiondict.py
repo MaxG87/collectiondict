@@ -1,7 +1,6 @@
 import typing as t
 from collections import Counter
 
-_T = t.TypeVar("_T")
 _KeyT = t.TypeVar("_KeyT", bound=t.Hashable)
 _ValueT = t.TypeVar("_ValueT")
 _HashableValueT = t.TypeVar("_HashableValueT", bound=t.Hashable)
