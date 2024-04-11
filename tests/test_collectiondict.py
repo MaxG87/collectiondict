@@ -51,7 +51,7 @@ def test_dict_to_one_element_collections(
 
 @given(
     clct_t=st.sampled_from([list, tuple, cc.MyList, cc.MyTuple]),
-    stream=st.lists(st.tuples(st.integers(), st.integers())),
+    stream=valid_streams(),
 )
 def test_to_collectiondict_for_lists(
     clct_t: t.Union[
@@ -88,7 +88,7 @@ def test_to_collectiondict_for_lists(
     clct_t=st.sampled_from(
         [set, frozenset, cc.MyFrozenset, cc.MySet, cc.MyCounter, Counter]
     ),
-    stream=st.lists(st.tuples(st.integers(), st.integers())),
+    stream=valid_streams(),
 )
 def test_to_collectiondict_for_reordering_robust_collections(
     clct_t: t.Union[
