@@ -90,7 +90,6 @@ def collectiondict(
     `clct` to specify the value type. Passing a specialised collection class is
     **not** supported currently. The examples show how to use a cast.
 
-
     Examples:
     ---------
     Simple usage using `set`:
