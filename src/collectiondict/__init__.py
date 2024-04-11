@@ -120,7 +120,7 @@ def collectiondict(
         return _collectiondict_for_frozensets(clct, iterable)
     elif issubclass(clct, tuple):
         return _collectiondict_for_tuple(clct, iterable)
-    else:  # pragma: nocover
+    else:
         # Due to compatiblity with Python 3.9 and 3.10, we cannot use
         # t.assert_never here. That would be preferable, though.
         raise AssertionError("Invalid collection type passed!")  # type: ignore[unreachable, unused-ignore]

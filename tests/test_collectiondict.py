@@ -1,5 +1,5 @@
 import typing as t
-from collections import Counter
+from collections import Counter, deque
 from itertools import groupby
 
 import pytest
@@ -11,6 +11,10 @@ from tests import custom_classes as cc
 
 _KeyT = t.TypeVar("_KeyT", bound=t.Hashable)
 _ValueT = t.TypeVar("_ValueT")
+
+
+def valid_streams() -> st.SearchStrategy[list[tuple[_KeyT, _ValueT]]]:
+    return st.lists(st.tuples(st.integers(), st.integers()))
 
 
 @given(
@@ -113,6 +117,17 @@ def test_to_collectiondict_for_reordering_robust_collections(
     result = collectiondict(clct_t, stream)
     assert all(isinstance(clct, clct_t) for clct in result.values())
     assert result == expected
+
+
+@given(
+    stream=valid_streams(),
+    invalid_clct=st.sampled_from([dict, list[int], deque]),
+)
+def test_breaks_for_invalid_collections(
+    stream: list[tuple[_KeyT, _ValueT]], invalid_clct: t.Type[t.Any]
+) -> None:
+    with pytest.raises(AssertionError):
+        collectiondict(invalid_clct, stream)
 
 
 def test_breaks_for_unhashable_values_with_sets() -> None:
