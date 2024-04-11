@@ -60,4 +60,38 @@ def reverse_mapping(
     dict[_HashableValueT, set[_KeyT]],
     dict[_HashableValueT, tuple[_KeyT, ...]],
 ]:
+    """
+    Map from values to keys
+
+    Given a mapping from keys to values (e.g. a dictionary), this function
+    reverses the mapping so it maps from values to keys. The values are
+    collected in a collection specified by `clct`.
+
+    The supported collections are fixed. Only the built-in collections
+    `Counter`, `frozenset`, `list`, `set`, and `tuple` as well as their
+    subclasses are supported. If a unsupported collection is passed, an
+    exception is raised. However, `mypy` will warn about it.
+
+    Due to the limits of Pythons type annotations, it is not possible to
+    specify the correct return type for the custom classes. Thus, custom
+    classes are supported but the return type is not inferred to be the parent
+    class.
+
+    In order to have the best type inference, it is recommended to **cast**
+    `clct` to specify the value type. Passing a specialised collection class is
+    **not** supported currently. The examples show how to use a cast.
+
+    Examples:
+    ---------
+    Simple usage using `set`:
+    >>> reverse_mapping(set, {1: "a", 2: "b", 3: "a"})
+    {'a': {1, 3}, 'b': {2}}
+
+    Usage using `frozenset` and a cast to have the best type inference:
+    >>> import typing as t
+    >>> clct = t.cast(t.Type[frozenset[int]], frozenset)
+    >>> reverse_mapping(clct, {1: "a", 2: "b", 3: "a"})
+    {'a': frozenset({1, 3}), 'b': frozenset({2})}
+    """
+
     return collectiondict(clct, ((v, k) for k, v in mapping.items()))
