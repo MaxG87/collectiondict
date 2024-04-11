@@ -1,4 +1,5 @@
 import typing as t
+from collections import Counter
 from itertools import groupby
 
 from hypothesis import given
@@ -21,6 +22,26 @@ def test_reverse_mapping_for_ordered_collections(
         t.Type[cc.MyTuple[int]],
         t.Type[list[int]],
         t.Type[tuple[int, ...]],
+    ],
+) -> None:
+    result = reverse_mapping(clct, mapping)
+    grouped = groupby(sorted(mapping.items(), key=lambda x: x[1]), key=lambda x: x[1])
+    expected = {}
+    for key, values in grouped:
+        expected[key] = clct(key for key, _ in values)
+    assert result == expected
+
+
+@given(mapping=valid_mappings(), clct=hu.valid_hashing_collections())
+def test_reverse_mapping_for_reordering_robust_collections(
+    mapping: dict[int, int],
+    clct: t.Union[
+        t.Type[Counter[int]],
+        t.Type[cc.MyCounter[int]],
+        t.Type[cc.MyFrozenset[int]],
+        t.Type[cc.MySet[int]],
+        t.Type[frozenset[int]],
+        t.Type[set[int]],
     ],
 ) -> None:
     result = reverse_mapping(clct, mapping)
