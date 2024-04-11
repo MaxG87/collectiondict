@@ -1,7 +1,8 @@
 import typing as t
-from collections import Counter
+from collections import Counter, deque
 from itertools import groupby
 
+import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
@@ -50,3 +51,26 @@ def test_reverse_mapping_for_reordering_robust_collections(
     for key, values in grouped:
         expected[key] = clct(key for key, _ in values)
     assert result == expected
+
+
+@given(
+    mapping=valid_mappings(),
+    invalid_clct=st.sampled_from([dict, list[int], deque]),
+)
+def test_breaks_for_invalid_collections(
+    mapping: dict[int, int], invalid_clct: t.Type[t.Any]
+) -> None:
+    with pytest.raises(AssertionError):
+        reverse_mapping(invalid_clct, mapping)
+
+
+def test_breaks_for_unhashable_values() -> None:
+    mapping = {1234: [1234]}
+    with pytest.raises(TypeError):
+        reverse_mapping(set, mapping)  # type: ignore[arg-type, type-var]
+    with pytest.raises(TypeError):
+        reverse_mapping(frozenset, mapping)  # type: ignore[arg-type, type-var]
+    with pytest.raises(TypeError):
+        reverse_mapping(cc.MySet, mapping)  # type: ignore[arg-type, type-var]
+    with pytest.raises(TypeError):
+        reverse_mapping(cc.MyFrozenset, mapping)  # type: ignore[arg-type, type-var]
