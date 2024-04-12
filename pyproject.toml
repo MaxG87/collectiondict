@@ -14,6 +14,9 @@ classifiers = [
 homepage = "https://github.com/MaxG87/collectiondict/"
 repository = "https://github.com/MaxG87/collectiondict/"
 
+[tool.poetry.urls]
+Changelog = "https://github.com/MaxG87/collectiondict/releases/"
+
 [tool.poetry.dependencies]
 python = ">=3.9,<3.13"
 
