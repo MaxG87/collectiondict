@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.3.0](https://github.com/MaxG87/collectiondict/compare/v0.2.0...v0.3.0) (2024-04-12)
+
+
+### Features
+
+* Add reverse_mapping to map from values to keys ([b70c94d](https://github.com/MaxG87/collectiondict/commit/b70c94de0947e85cb49b41ce76f23b48dffb7099))
+
+
+### Documentation
+
+* Improve docstring to handle two aspects ([2e9d8bf](https://github.com/MaxG87/collectiondict/commit/2e9d8bf5e00e6e2d938e60cb465ae373f8b729ca))
+* Improve presentation on PyPI ([ac0f4a5](https://github.com/MaxG87/collectiondict/commit/ac0f4a55a8ddccca2abd5d4efefb69f48b32cfb3))
+* Provide link to Changelog on PyPI ([c0c0f1c](https://github.com/MaxG87/collectiondict/commit/c0c0f1c8369ce8c7041d798c06de258551c1f60c))
+
 ## [0.2.0](https://github.com/MaxG87/collectiondict/compare/v0.1.0...v0.2.0) (2024-03-22)
 
 
