@@ -57,3 +57,24 @@ Scenario that might exceed memory:
     >>> N=1000  # could be humongous, e.g. 10**20
     >>> collectiondict(set, ((str(n%2), n%3) for n in range(N)))
     {'0': {0, 1, 2}, '1': {0, 1, 2}}
+
+
+## reverse_mapping
+
+Given a mapping, e.g. a dictionary, from keys to values, this function reverses
+the mapping so it maps from values to keys. The keys are collected in a
+collection specified by passing a constructor as argument.
+
+Simple usage using `set`:
+
+    >>> from collectiondict import reverse_mapping
+    >>> reverse_mapping(set, {1: "foobar", 2: "blablubb", 3: "foobar"})
+    {'foobar': {1, 3}, 'blablubb': {2}}
+
+Usage using `frozenset` and a cast to have the best type inference:
+
+    >>> import typing as t
+    >>> from collectiondict import reverse_mapping
+    >>> clct = t.cast(t.Type[frozenset[int]], frozenset)
+    >>> reverse_mapping(clct, {1: "foobar", 2: "blablubb", 3: "foobar"})
+    {'foobar': frozenset({1, 3}), 'blablubb': frozenset({2})}
