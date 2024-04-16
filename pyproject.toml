@@ -44,10 +44,10 @@ strict = true
 addopts = [
     "--cov", "src",
     "--doctest-modules",
+    "--doctest-glob", "*.md",
     "--cov-branch",
     "--cov-fail-under", "95"
 ]
-testpaths = ["src", "tests"]
 
 [tool.ruff]
 src = [".", "src/"]
