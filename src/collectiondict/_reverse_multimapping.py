@@ -63,15 +63,15 @@ def reverse_multimapping(
     dict[_HashableValueT, tuple[_KeyT, ...]],
 ]:
     """
-    Map from values to keys
+    Reverse multimapping to map from values to keys
 
-    Given a mapping from keys to values (e.g. a dictionary), this function
-    reverses the mapping so it maps from values to keys. The values are
-    collected in a collection specified by `clct`.
+    Given a mapping, e.g. a dictionary, from keys to an iterable of values,
+    this function reverses the mapping so it maps from values to keys. The
+    keys are collected in a collection specified by `clct`.
 
     The supported collections are fixed. Only the built-in collections
     `Counter`, `frozenset`, `list`, `set`, and `tuple` as well as their
-    subclasses are supported. If a unsupported collection is passed, an
+    subclasses are supported. If an unsupported collection is passed, an
     exception is raised. However, `mypy` will warn about it.
 
     Due to the limits of Pythons type annotations, it is not possible to
@@ -86,14 +86,14 @@ def reverse_multimapping(
     Examples:
     ---------
     Simple usage using `set`:
-    >>> reverse_multimapping(set, {1: "a", 2: "b", 3: "a"})
-    {'a': {1, 3}, 'b': {2}}
+    >>> reverse_multimapping(set, {1: "abc", 2: "bcd", 3: "a"})
+    {'a': {1, 3}, 'b': {1, 2}, 'c': {1, 2}, 'd': {2}}
 
     Usage using `frozenset` and a cast to have the best type inference:
     >>> import typing as t
     >>> clct = t.cast(t.Type[frozenset[int]], frozenset)
-    >>> reverse_multimapping(clct, {1: "a", 2: "b", 3: "a"})
-    {'a': frozenset({1, 3}), 'b': frozenset({2})}
+    >>> reverse_multimapping(clct, {1: [13, 37], 2: [13, 42], 3: [42]})
+    {13: frozenset({1, 2}), 37: frozenset({1}), 42: frozenset({2, 3})}
     """
 
     return collectiondict(
