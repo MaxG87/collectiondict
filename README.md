@@ -19,3 +19,41 @@ as opposed to be the class passed in (e.g. `class MySet(set)`).
 In order to have the best type inference, it is recommended to **cast** `clct_t`
 to specify the value type. Passing a specialised collection class is **not**
 supported currently. The examples show how to use a cast.
+
+
+## collectiondict
+
+Given any stream of key-value tuples, this function creates a multi-dictionary
+which maps all values to the corresponding key. Thus, `collectiondict(clct,
+stream)` is similar to `dict(stream)` but does not discard values. It is
+conceptually similar to [multidict](https://pypi.org/project/multidict/) but
+much broader with respect to the supported types.
+
+The implementation tries to be memory efficient and performant. Therefore, it
+is possible to use it on extremely large streams, as long as the end result
+fits in memory. Thus, if a list of the stream consumes more than half of the
+available memory, `collectiondict` can still be used. Furthermore, for
+deduplicating collections, e.g. `set`, the stream could exceed available
+memory, as long as the key-value pairs do not. One of the examples covers this
+scenario.
+
+Simple usage using `set`:
+
+    >>> from collectiondict import collectiondict
+    >>> collectiondict(set, [("a", 1), ("b", 2), ("a", 3)])
+    {'a': {1, 3}, 'b': {2}}
+
+Usage using `frozenset` and a cast to have the best type inference:
+
+    >>> import typing as t
+    >>> from collectiondict import collectiondict
+    >>> clct = t.cast(t.Type[frozenset[int]], frozenset)
+    >>> collectiondict(clct, [("a", 1), ("b", 2), ("a", 3)])
+    {'a': frozenset({1, 3}), 'b': frozenset({2})}
+
+Scenario that might exceed memory:
+
+    >>> from collectiondict import collectiondict
+    >>> N=1000  # could be humongous, e.g. 10**20
+    >>> collectiondict(set, ((str(n%2), n%3) for n in range(N)))
+    {'0': {0, 1, 2}, '1': {0, 1, 2}}

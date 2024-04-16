@@ -68,28 +68,6 @@ def collectiondict(
     `collectiondict(clct, stream)` is similar to `dict(stream)` but does not
     discard values.
 
-    The implementation tries to be memory efficient and performant. Therefore,
-    it is possible to use it on extremely large streams, as long as the end
-    result fits in memory. Thus, if a list of the stream consumes more than
-    half of the available memory, `collectiondict` can still be used.
-    Furthermore, for deduplicating collections, e.g. `set`, the stream could
-    exceed available memory, as long as the key-value pairs do not. One of the
-    examples covers this scenario.
-
-    The supported collections are fixed. Only the built-in collections
-    `Counter`, `frozenset`, `list`, `set`, and `tuple` as well as their
-    subclasses are supported. If a unsupported collection is passed, an
-    exception is raised. However, `mypy` will warn about it.
-
-    Due to the limits of Pythons type annotations, it is not possible to
-    specify the correct return type for the custom classes. Thus, custom
-    classes are supported but the return type is not inferred to be the parent
-    class.
-
-    In order to have the best type inference, it is recommended to **cast**
-    `clct` to specify the value type. Passing a specialised collection class is
-    **not** supported currently. The examples show how to use a cast.
-
     Examples:
     ---------
     Simple usage using `set`:
