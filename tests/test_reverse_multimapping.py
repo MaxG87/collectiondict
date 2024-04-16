@@ -94,3 +94,24 @@ def test_breaks_for_unhashable_values() -> None:
         reverse_multimapping(cc.MySet, mapping)  # type: ignore[arg-type, type-var]
     with pytest.raises(TypeError):
         reverse_multimapping(cc.MyFrozenset, mapping)  # type: ignore[arg-type, type-var]
+
+
+@given(
+    clct_t=hu.valid_hashing_collections().filter(
+        lambda clct_t: not issubclass(clct_t, Counter)
+    ),
+    mapping=valid_mappings(),
+)
+def test_roundtrip_with_reordering_robust_collections(
+    clct_t: t.Union[
+        t.Type[cc.MyFrozenset[t.Any]],
+        t.Type[cc.MySet[t.Any]],
+        t.Type[frozenset[t.Any]],
+        t.Type[set[t.Any]],
+    ],
+    mapping: dict[int, list[int]],
+) -> None:
+    start = reverse_multimapping(clct_t, mapping)
+    reversed_ = reverse_multimapping(clct_t, start)
+    roundtriped = reverse_multimapping(clct_t, reversed_)
+    assert start == roundtriped
