@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "collectiondict"
-version = "0.3.0"
+version = "0.4.0"
 description = "Helpers to create dictionaries that collect values into collections"
 authors = ["Max Görner <5477952+MaxG87@users.noreply.github.com>"]
 license = "BSD-3-Clause"

@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.4.0](https://github.com/MaxG87/collectiondict/compare/v0.3.0...v0.4.0) (2024-04-16)
+
+
+### Features
+
+* Add reverse_multimapping ([d52b2aa](https://github.com/MaxG87/collectiondict/commit/d52b2aa096754104171be0bc96eefadad8f042fc))
+
+
+### Documentation
+
+* Add docstring for `reverse_multimapping` ([8e3fea7](https://github.com/MaxG87/collectiondict/commit/8e3fea775bb3478cc43f5c4236982d742c33d667))
+* Add general explanations to README ([acc0bf5](https://github.com/MaxG87/collectiondict/commit/acc0bf5ac0e54aa9c05799738afb7b668dba9ee6))
+* Improve docstring of `reverse_mapping` ([1101fd1](https://github.com/MaxG87/collectiondict/commit/1101fd13ee3e5ed452604eb584b234223c03c050))
+* Move parts of collectiondict's docstring to README ([00c4c54](https://github.com/MaxG87/collectiondict/commit/00c4c54461ae717c51080b85f4090d8b872602db))
+* Move parts of reverse_mapping's docstring to README ([d1abd89](https://github.com/MaxG87/collectiondict/commit/d1abd8965545386b36a60a32b17cde5333d6fe0d))
+* Move parts of reverse_multimapping's docstring to README ([20ec412](https://github.com/MaxG87/collectiondict/commit/20ec41287739ec0b87f93d9b28c781bde9f375c4))
+
 ## [0.3.0](https://github.com/MaxG87/collectiondict/compare/v0.2.0...v0.3.0) (2024-04-12)
 
 
