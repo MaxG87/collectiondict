@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/MaxG87/collectiondict/compare/v0.4.0...v0.4.1) (2024-04-28)
+
+
+### Documentation
+
+* Remove two fill words ([d6477ed](https://github.com/MaxG87/collectiondict/commit/d6477ed4ace223e3b42f069e7f32cf3c793bd8ee))
+
 ## [0.4.0](https://github.com/MaxG87/collectiondict/compare/v0.3.0...v0.4.0) (2024-04-16)
 
 
