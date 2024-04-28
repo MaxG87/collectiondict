@@ -29,13 +29,12 @@ stream)` is similar to `dict(stream)` but does not discard values. It is
 conceptually similar to [multidict](https://pypi.org/project/multidict/) but
 much broader with respect to the supported types.
 
-The implementation tries to be memory efficient and performant. Therefore, it
-is possible to use it on extremely large streams, as long as the end result
-fits in memory. Thus, if a list of the stream consumes more than half of the
-available memory, `collectiondict` can still be used. Furthermore, for
-deduplicating collections, e.g. `set`, the stream could exceed available
-memory, as long as the key-value pairs do not. One of the examples covers this
-scenario.
+The implementation tries to be memory efficient and performant. It is possible
+to use it on extremely large streams, as long as the end result fits in memory.
+Thus, if a list of the stream consumes more than half of the available memory,
+`collectiondict` can still be used. For deduplicating collections, e.g. `set`,
+the stream could exceed available memory, as long as the key-value pairs do
+not. One of the examples covers this scenario.
 
 Simple usage using `set`:
 
