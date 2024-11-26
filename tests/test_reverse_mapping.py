@@ -57,12 +57,23 @@ def test_reverse_mapping_for_reordering_robust_collections(
 
 @given(
     mapping=valid_mappings(),
-    invalid_clct=st.sampled_from([dict, list[int], deque]),
+    invalid_clct=st.sampled_from([dict, deque]),
 )
 def test_breaks_for_invalid_collections(
     mapping: dict[int, int], invalid_clct: t.Type[t.Any]
 ) -> None:
     with pytest.raises(AssertionError):
+        reverse_mapping(invalid_clct, mapping)
+
+
+@given(
+    mapping=valid_mappings(),
+    invalid_clct=hu.generic_aliases(),
+)
+def test_breaks_for_generic_aliases(
+    mapping: dict[int, int], invalid_clct: t.Type[t.Any]
+) -> None:
+    with pytest.raises((AssertionError, TypeError)):
         reverse_mapping(invalid_clct, mapping)
 
 
