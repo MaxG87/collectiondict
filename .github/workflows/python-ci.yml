@@ -21,7 +21,7 @@ jobs:
           cache: "poetry"
       - name: Install dependencies
         run: |
-          poetry install
+          poetry install --with dev
       - name: Check formatting with black
         run: |
           poetry run black --check .

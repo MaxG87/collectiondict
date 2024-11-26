@@ -20,6 +20,9 @@ Changelog = "https://github.com/MaxG87/collectiondict/releases/"
 [tool.poetry.dependencies]
 python = ">=3.9,<3.14"
 
+[tool.poetry.group.dev]
+optional = true
+
 [tool.poetry.group.dev.dependencies]
 hypothesis = "^6.99.9"
 pytest = "^8.1.1"
