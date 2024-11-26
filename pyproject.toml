@@ -18,7 +18,7 @@ repository = "https://github.com/MaxG87/collectiondict/"
 Changelog = "https://github.com/MaxG87/collectiondict/releases/"
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.13"
+python = ">=3.9,<3.14"
 
 [tool.poetry.group.dev.dependencies]
 hypothesis = "^6.99.9"
