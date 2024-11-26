@@ -38,3 +38,19 @@ def valid_hashing_collections() -> st.SearchStrategy[t.Type[t.Any]]:
     return st.sampled_from(
         [set, frozenset, cc.MyFrozenset, cc.MySet, cc.MyCounter, Counter]
     )
+
+
+def generic_aliases() -> st.SearchStrategy[t.Type[t.Any]]:
+    return st.sampled_from(
+        [
+            list[bool],
+            list[int],
+            list[str],
+            set[bool],
+            set[float],
+            set[int],
+            tuple[bool, ...],
+            tuple[int, ...],
+            tuple[str, ...],
+        ]
+    )

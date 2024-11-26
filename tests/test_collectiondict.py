@@ -103,12 +103,23 @@ def test_to_collectiondict_for_reordering_robust_collections(
 
 @given(
     stream=hu.valid_streams(),
-    invalid_clct=st.sampled_from([dict, list[int], deque]),
+    invalid_clct=st.sampled_from([dict, deque]),
 )
 def test_breaks_for_invalid_collections(
     stream: list[tuple[_KeyT, _ValueT]], invalid_clct: t.Type[t.Any]
 ) -> None:
     with pytest.raises(AssertionError):
+        collectiondict(invalid_clct, stream)
+
+
+@given(
+    stream=hu.valid_streams(),
+    invalid_clct=hu.generic_aliases(),
+)
+def test_breaks_for_generic_aliases(
+    stream: list[tuple[_KeyT, _ValueT]], invalid_clct: t.Type[t.Any]
+) -> None:
+    with pytest.raises((AssertionError, TypeError)):
         collectiondict(invalid_clct, stream)
 
 
