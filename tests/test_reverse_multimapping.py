@@ -41,10 +41,10 @@ def test_reverse_multimapping_for_ordered_collections(
         expected[val] = Counter(k for k, _ in values)
 
     assert expected.keys() == result.keys()
-    for key in expected:
+    for key, val in expected.items():
         result_ctr = Counter(result[key])
         assert isinstance(result[key], clct)
-        assert expected[key] == result_ctr
+        assert val == result_ctr
 
 
 @given(mapping=valid_mappings(), clct=hu.valid_hashing_collections())
