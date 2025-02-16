@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.0](https://github.com/MaxG87/collectiondict/compare/v0.5.0...v1.0.0) (2025-02-16)
+
+
+### Build System
+
+* switched to `uv` for project management
+* some internal improvements regarding CI/CD automation
+
 ## [0.5.0](https://github.com/MaxG87/collectiondict/compare/v0.4.0...v0.5.0) (2024-11-27)
 
 

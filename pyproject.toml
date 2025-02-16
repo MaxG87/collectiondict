@@ -1,6 +1,6 @@
 [project]
 name = "collectiondict"
-version = "0.5.0"
+version = "1.0.0"
 description = "Helpers to create dictionaries that collect values into collections"
 authors = [ { name = "Max Görner", email ="5477952+MaxG87@users.noreply.github.com" } ]
 license = "BSD-3-Clause"
