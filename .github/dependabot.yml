@@ -3,9 +3,12 @@ updates:
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "monthly"
     groups:
       production-dependencies:
         dependency-type: "production"
       development-dependencies:
         dependency-type: "development"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps(dev)"
