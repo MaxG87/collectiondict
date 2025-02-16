@@ -5,7 +5,8 @@
 
 ### Build System
 
-* Remove last aspects of Poetry ([efa5394](https://github.com/MaxG87/collectiondict/commit/efa5394072ac3e276cd1acc7f9e0099882022c21))
+* switched to `uv` for project management
+* some internal improvements regarding CI/CD automation
 
 ## [0.5.0](https://github.com/MaxG87/collectiondict/compare/v0.4.0...v0.5.0) (2024-11-27)
 
