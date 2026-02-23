@@ -20,7 +20,6 @@ In order to have the best type inference, it is recommended to **cast** `clct_t`
 to specify the value type. Passing a specialised collection class is **not**
 supported currently. The examples show how to use a cast.
 
-
 ## collectiondict
 
 Given any stream of key-value tuples, this function creates a multi-dictionary
@@ -57,7 +56,6 @@ Scenario that might exceed memory:
     >>> collectiondict(set, ((str(n%2), n%3) for n in range(N)))
     {'0': {0, 1, 2}, '1': {0, 1, 2}}
 
-
 ## reverse_mapping
 
 Given a mapping, e.g. a dictionary, from keys to values, this function reverses
@@ -77,7 +75,6 @@ Usage using `frozenset` and a cast to have the best type inference:
     >>> clct = t.cast(t.Type[frozenset[int]], frozenset)
     >>> reverse_mapping(clct, {1: "foobar", 2: "blablubb", 3: "foobar"})
     {'foobar': frozenset({1, 3}), 'blablubb': frozenset({2})}
-
 
 ## reverse_multimapping
 
