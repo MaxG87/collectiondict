@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/MaxG87/collectiondict/compare/v1.0.0...v1.0.1) (2026-02-23)
+
+
+### Bug Fixes
+
+* **docs:** Fix minor typo ([fd42f92](https://github.com/MaxG87/collectiondict/commit/fd42f921bcb7c70fd97523cae9c6f580b1209463))
+
 ## [1.0.0](https://github.com/MaxG87/collectiondict/compare/v0.5.0...v1.0.0) (2025-02-16)
 
 
