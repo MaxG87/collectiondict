@@ -8,7 +8,7 @@ provides the functions `collectiondict`, `reverse_mapping` and
 All three functions expect the target collection to be provided as an argument.
 The supported collections are fixed. Only the built-in collections `Counter`,
 `frozenset`, `list`, `set`, and `tuple` as well as their subclasses are
-supported. If a unsupported collection is passed, an exception is raised.
+supported. If an unsupported collection is passed, an exception is raised.
 However, `mypy` will warn about it.
 
 Due to the limits of Pythons type annotations, it is not possible to specify
